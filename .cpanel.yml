@@ -1,5 +1,8 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/hasicody/public_html/galeeleeway.info
-    - /bin/cp -r * $DEPLOYPATH
+    - cd /home/hasicody/repositories/Galeeleeway-website
+    - /opt/cpanel/ea-nodejs18/bin/npm install
+    - /opt/cpanel/ea-nodejs18/bin/npm run build
+    - export DEPLOYPATH=/home/hasicody/public_html
+    - /bin/rsync -a build/ $DEPLOYPATH
