@@ -1,11 +1,4 @@
 
-
-"scripts": {
-  "dev": "vite",
-  "build": "vite build",
-  "preview": "vite preview"
-}
-
 {
   "name": "rest-express",
   "version": "1.0.0",
@@ -18,6 +11,9 @@
     "check": "tsc",
     "db:push": "drizzle-kit push"
   },
+  "scripts": {
+  "build": "tsc"
+},
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
     "@jridgewell/trace-mapping": "^0.3.25",
