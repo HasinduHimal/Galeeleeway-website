@@ -1,3 +1,8 @@
+
+"scripts": {
+  "build": "tsc" // or "react-scripts build" if using React
+}
+
 {
   "name": "rest-express",
   "version": "1.0.0",
