@@ -3,9 +3,15 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 // Set BASE_URL for password reset emails
-process.env.BASE_URL = process.env.REPL_SLUG 
-  ? `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co` 
-  : 'http://localhost:5000';
+process.env.BASE_URL = process.env.REPLIT_DEPLOYMENT_URL || process.env.REPLIT_ENVIRONMENT_URL || 
+  (process.env.REPL_SLUG && process.env.REPL_OWNER 
+    ? `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co` 
+    : 'http://localhost:5000');
+
+// Log the BASE_URL for debugging
+console.log("Using BASE_URL:", process.env.BASE_URL);
+console.log("REPLIT_ENVIRONMENT_URL:", process.env.REPLIT_ENVIRONMENT_URL);
+console.log("REPLIT_DEPLOYMENT_URL:", process.env.REPLIT_DEPLOYMENT_URL);
 
 const app = express();
 app.use(express.json());
