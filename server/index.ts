@@ -2,6 +2,11 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
+// Set BASE_URL for password reset emails
+process.env.BASE_URL = process.env.REPL_SLUG 
+  ? `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co` 
+  : 'http://localhost:5000';
+
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

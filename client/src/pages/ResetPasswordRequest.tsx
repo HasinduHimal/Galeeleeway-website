@@ -95,10 +95,8 @@ const ResetPasswordRequest = () => {
                 If you don't see the email, please check your spam folder.
               </p>
               <div className="flex justify-center">
-                <Link href="/admin">
-                  <a className="text-primary hover:underline">
-                    Return to Login
-                  </a>
+                <Link href="/admin" className="text-primary hover:underline">
+                  Return to Login
                 </Link>
               </div>
             </div>
@@ -136,10 +134,8 @@ const ResetPasswordRequest = () => {
                 </form>
               </Form>
               <div className="mt-4 text-center">
-                <Link href="/admin">
-                  <a className="text-sm text-gray-500 hover:text-gray-700">
-                    Back to Login
-                  </a>
+                <Link href="/admin" className="text-sm text-gray-500 hover:text-gray-700">
+                  Back to Login
                 </Link>
               </div>
             </>

@@ -157,9 +157,9 @@ const ResetPassword = () => {
               This password reset link is invalid or has expired.
             </p>
             <div className="flex justify-center">
-              <Link href="/reset-password-request">
-                <Button>Request New Reset Link</Button>
-              </Link>
+              <Button onClick={() => setLocation("/reset-password-request")}>
+                Request New Reset Link
+              </Button>
             </div>
           </div>
         </div>
@@ -195,9 +195,9 @@ const ResetPassword = () => {
               Your password has been successfully reset. You can now log in with your new password.
             </p>
             <div className="flex justify-center">
-              <Link href="/admin">
-                <Button>Go to Login</Button>
-              </Link>
+              <Button onClick={() => setLocation("/admin")}>
+                Go to Login
+              </Button>
             </div>
           </div>
         </div>
