@@ -5,6 +5,16 @@ import { randomBytes } from "crypto";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 
+// Helper function to create properly formatted password reset URLs
+function createPasswordResetUrl(token: string): string {
+  const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
+  // Encode the token to ensure it's URL-safe
+  const encodedToken = encodeURIComponent(token);
+  const resetUrl = `${baseUrl}/reset-password?token=${encodedToken}`;
+  console.log('Generated reset URL:', resetUrl);
+  return resetUrl;
+}
+
 // Set up JWT secret for token generation
 const JWT_SECRET = process.env.JWT_SECRET || "galeeleeway_secret_key";
 
@@ -92,7 +102,7 @@ export class PgStorage implements IStorage {
     
     try {
       // Send email with reset link
-      const resetUrl = `${process.env.BASE_URL || 'http://localhost:5000'}/reset-password?token=${token}`;
+      const resetUrl = createPasswordResetUrl(token);
       
       await transporter.sendMail({
         from: 'hasinduhimal@gmail.com',
@@ -258,7 +268,7 @@ export class MemStorage implements IStorage {
     
     try {
       // Send email with reset link
-      const resetUrl = `${process.env.BASE_URL || 'http://localhost:5000'}/reset-password?token=${token}`;
+      const resetUrl = createPasswordResetUrl(token);
       
       await transporter.sendMail({
         from: 'hasinduhimal@gmail.com',

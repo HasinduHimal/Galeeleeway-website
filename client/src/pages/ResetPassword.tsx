@@ -56,14 +56,19 @@ const ResetPassword = () => {
       return;
     }
     
-    setToken(tokenParam);
+    // Make sure we're using the properly decoded token
+    const decodedToken = decodeURIComponent(tokenParam);
+    setToken(decodedToken);
+    
+    console.log("Processing reset token:", decodedToken);
     
     // Verify token validity
     const verifyToken = async () => {
       try {
+        // Use encodeURIComponent to ensure token is properly encoded in the URL
         const response = await apiRequest(
           "GET",
-          `/api/reset-password/validate?token=${tokenParam}`
+          `/api/reset-password/validate?token=${encodeURIComponent(decodedToken)}`
         );
         
         setIsValid(true);
