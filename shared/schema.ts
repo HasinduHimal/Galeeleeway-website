@@ -6,11 +6,30 @@ export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
+  email: text("email"),
+  resetToken: text("reset_token"),
+  resetTokenExpiry: timestamp("reset_token_expiry"),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
+  email: true,
+});
+
+// Schema for password reset requests
+export const passwordResetRequestSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+});
+
+// Schema for password reset
+export const passwordResetSchema = z.object({
+  token: z.string(),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  confirmPassword: z.string(),
+}).refine(data => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
 });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
