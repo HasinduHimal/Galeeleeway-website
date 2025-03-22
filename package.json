@@ -1,6 +1,6 @@
 
 "scripts": {
-  "build": "tsc" // or "react-scripts build" if using React
+  "build": "tsc" 
 }
 
 {
