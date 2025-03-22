@@ -55,10 +55,116 @@ export class PgStorage implements IStorage {
     const result = await this.db.select().from(users).where({ username }).limit(1);
     return result[0];
   }
+  
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const result = await this.db.select().from(users).where({ email }).limit(1);
+    return result[0];
+  }
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const result = await this.db.insert(users).values(insertUser).returning();
     return result[0];
+  }
+  
+  async createPasswordResetToken(email: string): Promise<string | null> {
+    const user = await this.getUserByEmail(email);
+    if (!user) {
+      return null;
+    }
+    
+    // Create a random token
+    const resetToken = randomBytes(32).toString('hex');
+    
+    // Set expiry to 1 hour from now
+    const resetTokenExpiry = new Date(Date.now() + 3600000);
+    
+    // Update user with reset token
+    await this.db
+      .update(users)
+      .set({ 
+        resetToken, 
+        resetTokenExpiry 
+      })
+      .where({ id: user.id });
+    
+    // Generate a JWT token that includes the reset token
+    const token = jwt.sign({ resetToken }, JWT_SECRET, { expiresIn: '1h' });
+    
+    try {
+      // Send email with reset link
+      const resetUrl = `${process.env.BASE_URL || 'http://localhost:5000'}/reset-password?token=${token}`;
+      
+      await transporter.sendMail({
+        from: 'hasinduhimal@gmail.com',
+        to: email,
+        subject: 'Password Reset - Galeeleeway Educational Institute',
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #3b82f6;">Password Reset Request</h2>
+            <p>You requested a password reset for your Galeeleeway Educational Institute admin account.</p>
+            <p>Click the button below to reset your password. This link will expire in 1 hour.</p>
+            <div style="margin: 30px 0;">
+              <a href="${resetUrl}" 
+                 style="background-color: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block;">
+                 Reset Password
+              </a>
+            </div>
+            <p>If you didn't request this password reset, please ignore this email or contact support.</p>
+            <p>Thank you,<br>Galeeleeway Educational Institute Team</p>
+          </div>
+        `
+      });
+      
+      return token;
+    } catch (error) {
+      console.error('Error sending password reset email:', error);
+      return null;
+    }
+  }
+  
+  async validateResetToken(token: string): Promise<User | null> {
+    try {
+      // Verify the JWT token
+      const decoded = jwt.verify(token, JWT_SECRET) as { resetToken: string };
+      const resetToken = decoded.resetToken;
+      
+      // Find user with this reset token and valid expiry
+      const result = await this.db
+        .select()
+        .from(users)
+        .where({ resetToken })
+        .limit(1);
+      
+      const user = result[0];
+      
+      if (!user || !user.resetTokenExpiry || user.resetTokenExpiry < new Date()) {
+        return null;
+      }
+      
+      return user;
+    } catch (error) {
+      console.error('Error validating reset token:', error);
+      return null;
+    }
+  }
+  
+  async resetPassword(token: string, newPassword: string): Promise<boolean> {
+    const user = await this.validateResetToken(token);
+    if (!user) {
+      return false;
+    }
+    
+    // Update password and clear reset token
+    await this.db
+      .update(users)
+      .set({ 
+        password: newPassword,
+        resetToken: null, 
+        resetTokenExpiry: null 
+      })
+      .where({ id: user.id });
+    
+    return true;
   }
   
   // Contact form methods

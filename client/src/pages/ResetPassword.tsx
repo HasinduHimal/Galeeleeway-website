@@ -61,9 +61,10 @@ const ResetPassword = () => {
     // Verify token validity
     const verifyToken = async () => {
       try {
-        const response = await apiRequest(`/api/reset-password/validate?token=${tokenParam}`, {
-          method: "GET"
-        });
+        const response = await apiRequest(
+          "GET",
+          `/api/reset-password/validate?token=${tokenParam}`
+        );
         
         setIsValid(true);
       } catch (error) {
@@ -84,17 +85,15 @@ const ResetPassword = () => {
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     try {
-      await apiRequest("/api/reset-password/reset", {
-        method: "POST",
-        body: JSON.stringify({
+      await apiRequest(
+        "POST",
+        "/api/reset-password/reset",
+        {
           token,
           password: data.password,
           confirmPassword: data.confirmPassword
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+        }
+      );
 
       setIsCompleted(true);
       toast({
