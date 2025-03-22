@@ -8,6 +8,8 @@ import About from "@/pages/About";
 import Courses from "@/pages/Courses";
 import Contact from "@/pages/Contact";
 import Admin from "@/pages/Admin";
+import ResetPasswordRequest from "@/pages/ResetPasswordRequest";
+import ResetPassword from "@/pages/ResetPassword";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
@@ -24,6 +26,8 @@ function Router() {
           <Route path="/courses" component={Courses} />
           <Route path="/contact" component={Contact} />
           <Route path="/admin" component={Admin} />
+          <Route path="/reset-password" component={ResetPassword} />
+          <Route path="/reset-password-request" component={ResetPasswordRequest} />
           <Route component={NotFound} />
         </Switch>
       </main>

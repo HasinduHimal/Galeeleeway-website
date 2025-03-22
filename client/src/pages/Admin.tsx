@@ -70,7 +70,7 @@ const Admin = () => {
             </form>
             <p className="mt-4 text-sm text-gray-500 text-center">
               <a 
-                href="mailto:hasinduhimal@gmail.com?subject=Password%20Recovery%20Request&body=I%20need%20assistance%20recovering%20my%20admin%20password%20for%20the%20Galeeleeway%20Educational%20Institute%20website." 
+                href="/reset-password" 
                 className="text-primary hover:underline"
               >
                 Forgot password?
